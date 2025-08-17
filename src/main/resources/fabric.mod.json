@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "better_fletching_table",
+  "version": "${version}",
+  "name": "Better Fletching Table",
+  "description": "adding long-awaited fletching table UI",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/better_fletching_table/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "me.cybdo.better_fletching_table.client.Better_fletching_tableClient"
+    ],
+    "main": [
+      "me.cybdo.better_fletching_table.Better_fletching_table"
+    ]
+  },
+  "mixins": [
+    "better_fletching_table.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
