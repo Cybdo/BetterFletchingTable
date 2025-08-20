@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+    "textures": {
+    "layer0": "better_fletching_table:item/quiver"
+    }
+}
