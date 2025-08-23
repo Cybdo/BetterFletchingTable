@@ -4,6 +4,7 @@
   "package": "me.cybdo.better_fletching_table.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "FletchingTableBlockMixin"
   ],
   "client": [
   ],

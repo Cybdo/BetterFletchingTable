@@ -18,7 +18,8 @@ import java.util.function.Function;
 
 public class ModItems {
 
-    public static final Item QUIVER = registerItem("quiver", QuiverItem::new, new Item.Settings());
+    public static final Item QUIVER = registerItem("quiver", BundleItem::new, new Item.Settings());
+    public static final Item MACE_ARROW = registerItem("mace_arrow", MaceArrowItem::new, new Item.Settings());
 
     public static Item registerItem(String name, Function<Item.Settings, Item> factory, Item.Settings settings) {
         final RegistryKey<Item> registerKey = RegistryKey.of(RegistryKeys.ITEM, Identifier.of(Better_fletching_table.MOD_ID, name));
@@ -28,9 +29,13 @@ public class ModItems {
     private static void customTools(FabricItemGroupEntries entries) {
         entries.add(QUIVER);
     }
+    private static void customArrows(FabricItemGroupEntries entries) {
+        entries.add(MACE_ARROW);
+    }
 
     public static void registerModItems() {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(ModItems::customTools);
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(ModItems::customArrows);
     }
 
 

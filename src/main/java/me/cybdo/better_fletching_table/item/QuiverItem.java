@@ -5,11 +5,10 @@ import net.minecraft.component.type.BundleContentsComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.StackReference;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundCategory;
@@ -19,7 +18,11 @@ import net.minecraft.util.ClickType;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.world.World;
 
-public class QuiverItem extends Item {
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+
+public class QuiverItem extends BundleItem {
 
     public static final int TOOLTIP_STACKS_COLUMNS = 4;
     public static final int TOOLTIP_STACKS_ROWS = 3;
@@ -27,19 +30,14 @@ public class QuiverItem extends Item {
     public static final int MAX_TOOLTIP_STACKS_SHOWN_WHEN_TOO_MANY_TYPES = 11;
     private static final int FULL_ITEM_BAR_COLOR = ColorHelper.fromFloats(1.0F, 1.0F, 0.33F, 0.33F);
     private static final int ITEM_BAR_COLOR = ColorHelper.fromFloats(1.0F, 0.44F, 0.53F, 1.0F);
-    private static final int field_54109 = 10;
-    private static final int field_54110 = 2;
     private static final int MAX_USE_TIME = 200;
 
 
-    public QuiverItem(Settings settings) {
+
+    public QuiverItem(BundleItem.Settings settings) {
         super(settings);
     }
 
-    public static float getAmountFilled(ItemStack stack) {
-        BundleContentsComponent bundleContentsComponent = (BundleContentsComponent) stack.getOrDefault(DataComponentTypes.BUNDLE_CONTENTS, BundleContentsComponent.DEFAULT);
-        return bundleContentsComponent.getOccupancy().floatValue();
-    }
 
     public boolean onStackClicked(ItemStack stack, Slot slot, ClickType clickType, PlayerEntity player) {
         BundleContentsComponent bundleContentsComponent = (BundleContentsComponent) stack.get(DataComponentTypes.BUNDLE_CONTENTS);
@@ -48,7 +46,7 @@ public class QuiverItem extends Item {
         } else {
             ItemStack itemStack = slot.getStack();
             BundleContentsComponent.Builder builder = new BundleContentsComponent.Builder(bundleContentsComponent);
-            if (clickType == ClickType.LEFT && !itemStack.isEmpty()) {
+            if (clickType == ClickType.LEFT && !itemStack.isEmpty() && itemStack.isIn(ItemTags.ARROWS)) {
                 if (builder.add(slot, player) > 0) {
                     playInsertSound(player);
                 } else {
@@ -73,12 +71,15 @@ public class QuiverItem extends Item {
                 this.onContentChanged(player);
                 return true;
             } else {
+                playInsertFailSound(player);
                 return false;
             }
         }
     }
 
-
+    public static List<BundleItem> getBundles() {
+        return Stream.of(ModItems.QUIVER, Items.BUNDLE, Items.WHITE_BUNDLE, Items.ORANGE_BUNDLE, Items.MAGENTA_BUNDLE, Items.LIGHT_BLUE_BUNDLE, Items.YELLOW_BUNDLE, Items.LIME_BUNDLE, Items.PINK_BUNDLE, Items.GRAY_BUNDLE, Items.LIGHT_GRAY_BUNDLE, Items.CYAN_BUNDLE, Items.BLACK_BUNDLE, Items.BROWN_BUNDLE, Items.GREEN_BUNDLE, Items.RED_BUNDLE, Items.BLUE_BUNDLE, Items.PURPLE_BUNDLE).map((item) -> (BundleItem)item).toList();
+    }
 
     private static void playRemoveOneSound(Entity entity) {
         entity.playSound(SoundEvents.ITEM_BUNDLE_REMOVE_ONE, 0.8F, 0.8F + entity.getWorld().getRandom().nextFloat() * 0.4F);
